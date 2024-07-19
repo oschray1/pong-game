@@ -4,38 +4,31 @@ class Ball extends Circle {
         this.moveDirection = moveDirection;
         this.initialSpeed = initialSpeed;
         this.acceleration = acceleration;
-        this.time = 0;
+        this.accerelatedSpeed = 0;
     }
 
     update() {
         let speedVector = new Vector(
-            this.moveDirection.dx * (this.initialSpeed + this.acceleration * this.time),
-            this.moveDirection.dy * (this.initialSpeed + this.acceleration * this.time),
+            this.moveDirection.dx * (this.initialSpeed + this.accerelatedSpeed),
+            this.moveDirection.dy * (this.initialSpeed + this.accerelatedSpeed),
         );
 
         this.position.addVector(speedVector);
 
-        this.checkBorders(); 
-
-        this.time += 0.01;
+        this.accerelatedSpeed += this.acceleration;
     }
 
-    checkBorders() {
-        const distanceToUpperBorder = this.position.y - this.radius;
-        const distanceToLowerBorder = canvas.height - this.position.y - this.radius;
+    putInField() {
+        this.position = new Point(canvas.width / 2, canvas.height / 2);
+        this.moveDirection = new Vector(1, 1);
+        this.accerelatedSpeed = 0;
+    }
 
-        if (distanceToLowerBorder <= 0 || distanceToUpperBorder <= 0) {
-            this.moveDirection.flipY();
-        }
+    get rightEdgeX() {
+        return this.position.x + this.radius;
+    }
 
-        const distanceToLeftBorder = this.position.x - this.radius;
-        const distanceToRightBorder = canvas.width - this.position.x - this.radius;
-
-        if (distanceToLeftBorder <= 0 || distanceToRightBorder <= 0) {
-            this.moveDirection.flipX();
-        }
-
-
-
+    get leftEdgeX() {
+        return this.position.x - this.radius;
     }
 }
